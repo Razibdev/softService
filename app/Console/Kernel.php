@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\UpdateEveryminute::class,
         Commands\UpdateWorkEveryminute::class,
+        Commands\SecduleQueueWorker::class,
     ];
 
     /**
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('update:everyminute')->everyTwoMinutes()->runInBackground();
         $schedule->command('update:workeveryminute')->everyMinute()->withoutOverlapping(1);
         $schedule->command('update:everyminute')->everyTwoMinutes()->runInBackground();
+        $schedule->command('emails:work')->everyMinute();
 
     }
 

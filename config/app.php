@@ -177,6 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         'Webpatser\Countries\CountriesServiceProvider',
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
     ],
 

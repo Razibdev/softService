@@ -47,8 +47,13 @@ return [
         //     'hash' => false,
         // ],
 
+//        'api' => [
+//            'driver' => 'passport',
+//            'provider' => 'users',
+//        ],
+
         'api' => [
-            'driver' => 'passport',
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],

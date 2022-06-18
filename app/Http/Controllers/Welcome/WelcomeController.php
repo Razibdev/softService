@@ -482,6 +482,16 @@ class WelcomeController extends Controller
         }
     }
 
+
+
+
+
+
+
+
+
+
+
     public function courseShare(Request $request)
     {
         $profile = ServiceProfile::find($request->profile);
@@ -1253,7 +1263,7 @@ class WelcomeController extends Controller
             $bt->type_id = $payment->id;
             $bt->addedby_id = Auth::id();
             $bt->save();
-            
+
 
             $oldBalance = $serviceItemOwner->balance;
             $serviceItemOwner->increment('balance', $payableAmount);
@@ -1300,5 +1310,5 @@ class WelcomeController extends Controller
         return redirect()->back()->with('success', 'order Status ' . $payment->order_status . ' sucsessfull');
     }
 
-   
+
 }

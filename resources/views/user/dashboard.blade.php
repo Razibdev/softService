@@ -234,7 +234,7 @@
                                             var query = $(this).val();
                                             $.ajax({
                                                 url:'{{ route('search') }}',
-                                                type:'GET',
+                                                type:'get',
                                                 data:{'name':query},
                                                 success:function (data) {
                                                     $('#product_list').html(data);
@@ -242,16 +242,16 @@
                                             })
                                         });
                                         $(document).on('click', 'li', function(){
-                                              
+
                                                 var value = $(this).text();
                                                 $('#name').val(value);
                                                 $('#product_list').html("");
                                         });
                                     });
-                                </script>   
+                                </script>
                                 <div class="col-2 col-xs-2 col-sm-2 col-md-2">
                                     <div class="card-tools mt-2">
-                                     
+
                                             <!-- Left navbar links -->
                                             <ul class="navbar-nav">
                                                 <li class="nav-item">
@@ -267,8 +267,8 @@
                                                     </div>
                                                 </li>
                                             </ul>
-                                       
-    
+
+
                                     </div>
                                     <!-- /.card-tools -->
 
@@ -290,15 +290,15 @@
                     <p class="mb-3">
                         <a href="{{ route('user.whatDoYouWant') }}" class="btn btn-default w3-deep-orange">{{__('userdashboard.what_do_you_want')}}</a>
                         <a href="{{ route('user.SoftcomJobCandidateApprovedList') }}" class="btn btn-default w3-deep-orange">{{__('userdashboard.hire_worker')}}</a>
-                       
+
                         <a href="" class="btn btn-default w3-deep-orange" data-toggle="collapse" data-target="#collapseOne"
                             aria-expanded="true" aria-controls="collapseOne">{{__('userdashboard.freelancing')}}</a>
 
                         <button class="btn w3-deep-orange w3-circle" data-toggle="collapse" data-target="#collapseTwo"
                             aria-expanded="true" aria-controls="collapseTwo"> <i class="fas fa-plus"></i>
                         </button>
-                        
-                        
+
+
                     </p>
 
                     <div id="collapseOne" class="collapse" aria-labelledby="collapseOne" data-parent="#accordion">
@@ -616,12 +616,12 @@
                             <i class="fa fa-heart" aria-hidden="true"></i>
                             <h5 style="margin-right: 5%;">{{$speciallink->title ?? ''}}</h5>
                         </div>
-                        
+
                     </div>
                 </a>
             </div>
             @endif
- 
+
             <div class="col-4 col-xs-6 col-sm-6 col-md-4">
                 <a class="text-white" href="{{ route('subscriber.cartsServiceProfileProduct') }}">
                     <div class="textscontent-saif">
@@ -851,9 +851,9 @@
 
             <div class="card" >
                 <div class="card-body">
-                    {{-- <div class="row"> 
+                    {{-- <div class="row">
                         @include('user.shopAjax') --}}
-                        
+
                             <near-shop></near-shop>
 
                     {{-- </div> --}}
@@ -911,7 +911,7 @@
 
 
     // const app =Vue.createApp({
-    
+
     //     data() {
     //                 return {
     //                     shopName: "",
@@ -924,8 +924,8 @@
     //                 }
     //             },
     //         methods: {
-    
-    
+
+
     //           async fetchShops() {
 
                         //    let shops = await axios.get(`/mypanel/user/dashboard/fetchdata?page=${this.page}`, {
@@ -937,7 +937,7 @@
                         //     });
     //                         console.log(shops);
 
-                            
+
     //                         // .then(res => {
     //                         //     this.shops = res.data.shops;
     //                         //     console.log(res);
@@ -945,11 +945,11 @@
     //                         //     this.loading = false;
     //                         // })
     //                     },
-                
-    
-                       
-                
-                
+
+
+
+
+
                         // getLocation(closure) {
                         //     if (navigator.geolocation) {
                         //         navigator.geolocation.getCurrentPosition((position) => {
@@ -963,7 +963,7 @@
                         //                 this.locationErrorMessage = "Please allow location access.";
                         //             }
                         //         });
-                        //     } else { 
+                        //     } else {
                         //         x.innerHTML = "Geolocation is not supported by this browser.";
                         //     }
                         // },
@@ -981,11 +981,11 @@
     //                 // });
 
     //             })
-    
+
     //             // console.log(this.lat);
     //             // alert('ok');
     //         },
-           
+
     //     }).mount('#app');
     </script>
 

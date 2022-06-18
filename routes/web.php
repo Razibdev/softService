@@ -1,9 +1,9 @@
 <?php
-
 use App\Http\Controllers\OnlinePaymentController;
 use App\Http\Controllers\User\UserDashborad\UserDashboardController;
 use App\Http\Controllers\XmlSitemapController;
 use Illuminate\Support\Facades\Route;
+use App\Models\HomeShortCartFavorite;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +16,41 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    // \Artisan::call('storage:link');
-    return view('welcome');
+include 'auth_route.php';
+
+
+Route::get('/', ['uses' => 'AutocompleteSearchController@index', 'as' => 'user.user.user']);
+
+// Razib work
+Route::post('search-user', ['uses' => 'AutocompleteSearchController@autosearchUser', 'as' => 'search.user']);
+Route::post('search-user-short-cart', ['uses' => 'AutocompleteSearchController@autosearchUserShortCart', 'as' => 'search.user.short.cart']);
+Route::post('search-user-short-cart-favorite', ['uses' => 'AutocompleteSearchController@autosearchUserShortCartFavorite', 'as' => 'search.user.short.cart.favorite']);
+
+
+// Razib Hossen
+
+
+
+
+
+//Route::get('/', function () {
+//
+//
+//
+//    return view('app_view');
+//});
+
+//Route::get('/', function () {
+//    // \Artisan::call('storage:link');
+//    // \Artisan::call('storage:link');
+//    return view('welcome');
+//});
+
+
+
+Route::get('/{any}', function () {
+//    $homeShortCart = HomeShortCartFavorite::take(3)->get();
+    return view('app_view');
 });
 
 
@@ -77,7 +109,7 @@ Route::get('opinions', [
 
 //Opinion End
 
-// blog Start 
+// blog Start
 Route::get('/{type}', [
     'uses' => 'Blog\BlogController@index',
     'as' => 'welcome.blog'
@@ -122,7 +154,7 @@ Route::get('{type}/search/{in}/{search}', [
 //Blog End
 
 
-// for User 
+// for User
 Route::get('blog/make/new/post', [
     'uses' => 'Blog\BlogController@addNewBlog',
     'as' => 'welcome.addNewBlog'
@@ -136,7 +168,7 @@ Route::post('blog/store/new/blog/from/user', [
     'as' => 'welcome.storeNewBlogFromUser'
 ]);
 
-// blog Start 
+// blog Start
 
 Route::get('profile/{profile}/details/subscription/{reffer}', [
     'uses' => 'Welcome\WelcomeController@profileShare',
@@ -382,7 +414,7 @@ Route::group(['middleware' => ['auth', 'role:subscriber'], 'prefix' => 'mypanel'
         'as' => 'subscriber.subscriptionJobSearch'
     ]);
 
- 
+
 
     Route::get('subscription/move/balance/to/wallet/subscription/{subscription}', [
         'uses' => 'Subscirber\UserSubscriberDashboardController@moveBalanceToWallet',
@@ -554,7 +586,7 @@ Route::group(['middleware' => ['auth', 'role:subscriber'], 'prefix' => 'mypanel'
         'uses' => 'Subscirber\UserSubscriberFreeLanceJobController@profileDetails',
     ]);
 
-//Course Add start 
+//Course Add start
 
 Route::get('all/course-item/of/profile/{profile}/subscription/{subscription}', [
     'as' => 'subscriber.allcourseitems',
@@ -608,7 +640,7 @@ Route::get('/course-item/{item}/delete', [
         'as' => 'subscriber.updateServiceItems',
         'uses' => 'Subscirber\ServiceItems\ServiceItemController@updateServiceItems',
     ]);
-    
+
     // Route::get('profile/details/new/service-item/subscription/{subscription}/profile/{profile}', [
     //     'as' => 'subscriber.newServiceItem',
     //     'uses' => 'Subscirber\ServiceItems\ServiceItemController@newServiceItem',
@@ -677,7 +709,7 @@ Route::get('/course-item/{item}/delete', [
 
 
     //Carts
-    //Course add and enroll 
+    //Course add and enroll
     Route::get('add/to/cart/profile/{profile}/course/{product}/subscription/{subscription}', [
         'as' => 'subscriber.addToCartCourse',
         'uses' => 'Subscirber\Course\CourseController@addToCartCourse',
@@ -791,7 +823,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'mypanel'], function () {
         'uses' => 'User\UserDashborad\UserDashboardController@usershopDataItem'
     ]);
 
-    
+
     Route::get('/user/dashboard/fetchproduct/{id}', [
         'uses' => 'User\UserDashborad\UserDashboardController@usershopDataProduct'
     ]);
@@ -824,8 +856,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'mypanel'], function () {
 
 
     // Route::delete('/user-service-product-cart', 'ServiceProductCartController@destroyAll');
-   
-    
+
+
 });
 
 
@@ -879,7 +911,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'mypanel'], function () {
     ]);
 
 
- 
+
     Route::get('jobs/dropcv/dashboard', [
         'uses' => 'Softjobs\DropCvController@dashboard',
         'as' => 'dropcv.dashboard'
@@ -932,7 +964,7 @@ Route::get('user/softcommerce/candidate/applyform', [
     'as' => 'user.SoftcomJobApplyForm'
 ]);
 
-    
+
 Route::post('user/softcommerce/candidate/applyform/store/', [
     'uses' => 'User\UserDashborad\UserDashboardController@SoftcomJobApplyStore',
     'as' => 'user.SoftcomJobApplyStore'
@@ -1002,7 +1034,7 @@ Route::get('user/product/deliveryman/delete/{id}', [
 
 
 
-//User Review and rating 
+//User Review and rating
 Route::post('profile/review/rating/store', [
     'uses' => 'User\UserDashborad\UserDashboardController@ratingstore',
     'as' => 'user.ratingstore'
@@ -1015,7 +1047,7 @@ Route::get('profile/review/rating/delete/{id}', [
 
 
 
-   
+
 
     Route::get('dashboard', [
         'uses' => 'User\UserDashborad\UserDashboardController@dashboard',
@@ -1052,7 +1084,7 @@ Route::get('profile/review/rating/delete/{id}', [
         'as' => 'user.notificationsdetails'
     ]);
 
-    
+
     // Favourate Start
 
     Route::get('dashboard/my/needs', [
@@ -1110,7 +1142,7 @@ Route::get('profile/review/rating/delete/{id}', [
         'as' => 'user.userdepositdetails'
     ]);
 
-    //publish and unpublish service 
+    //publish and unpublish service
 
     Route::get('dashboard/user/publishservice', [
         'uses' => 'User\UserDashborad\UserDashboardController@userpublishservice',
@@ -1126,7 +1158,7 @@ Route::get('profile/review/rating/delete/{id}', [
         'uses' => 'User\UserDashborad\UserDashboardController@usertrialservice',
         'as' => 'user.usertrialservice'
     ]);
-    
+
     Route::get('dashboard/user/vendorlist', [
         'uses' => 'User\UserDashborad\UserDashboardController@uservendorlist',
         'as' => 'user.uservendorlist'
@@ -1175,7 +1207,7 @@ Route::get('profile/review/rating/delete/{id}', [
     ]);
 
 
-    
+
     Route::get('dashboard/service/details/order/{order}/type/{type}', [
         'uses' => 'User\UserDashborad\UserDashboardController@ServieItemOrderDetails',
         'as' => 'user.ServieItemOrderDetails'
@@ -1236,7 +1268,7 @@ Route::get('profile/review/rating/delete/{id}', [
         'uses' => 'User\UserDashborad\UserDashboardController@myProfile',
         'as' => 'user.myProfile'
     ]);
-    //Employee Routes 
+    //Employee Routes
 
     Route::get('dashboard/employee/createprofile', [
         'uses' => 'User\UserDashborad\EmployeeDashboardController@EmployeeCreateProfileList',
@@ -1255,7 +1287,7 @@ Route::get('profile/review/rating/delete/{id}', [
 
 
 
-    //Get Auto lat lng in user Table Start 
+    //Get Auto lat lng in user Table Start
     Route::get('dashboard/user/location/set', [
         'uses' => 'User\UserDashborad\UserDashboardController@dashboard',
         'as' => 'user.locationSet'
@@ -1394,6 +1426,9 @@ Route::get('profile/review/rating/delete/{id}', [
         'uses' => 'User\UserDashborad\UserDashboardController@searchOrderwiseCategoryAjax',
         'as' => 'user.searchOrderwiseCategoryAjax'
     ]);
+
+
+
 
     Route::post('dashboard/submit/profile/product', [
         'uses' => 'User\UserDashborad\UserDashboardController@submitServiceProduct',
@@ -1561,7 +1596,7 @@ Route::get('search', ['uses' => 'AutocompleteSearchController@autosearch', 'as' 
     ]);
 
 
-    
+
     //MY blog end
 
 
@@ -1615,12 +1650,12 @@ Route::get('search', ['uses' => 'AutocompleteSearchController@autosearch', 'as' 
         'uses' => 'User\UserDashborad\UserDashboardController@userOTPCheck',
         'as' => 'user.userOTPCheck'
     ]);
-    
+
     Route::post('tenant/pin/update', [
         'uses' => 'User\UserDashborad\UserDashboardController@userPinUpdate',
         'as' => 'user.userPinUpdate'
     ]);
-   
+
 
     Route::get('tenant/password/change', [
         'uses' => 'User\UserDashborad\UserDashboardController@userPasswordChange',
@@ -2319,7 +2354,7 @@ Route::get('dashborad/tenentinformation/{type}', [
         'uses' => 'Admin\AdminController@serviceItemsDetails',
         'as' => 'admin.serviceItemsDetails'
     ]);
-    
+
     Route::get('service/item/{item}/status/{status}', [
         'uses' => 'Admin\AdminController@serviceItemsStatusUpdate',
         'as' => 'admin.serviceItemsStatusUpdate'
@@ -2403,7 +2438,7 @@ Route::get('dashborad/tenentinformation/{type}', [
             'uses' => 'Admin\AdminController@updatecategorylist',
             'as' => 'admin.updatecategorylist'
         ]);
-    
+
         //user sms send end
 
     //user send sms
@@ -2464,7 +2499,7 @@ Route::get('dashborad/tenentinformation/{type}', [
         'uses' => 'Admin\AdminController@socialGroupsUpdate',
         'as' => 'admin.socialGroupsUpdate'
     ]);
-    //Socail Groups End 
+    //Socail Groups End
 
     //Service Products Orders Start
     Route::get('service/products/orders/list', [
@@ -2567,7 +2602,7 @@ Route::get('suggession-complain/chat/{chat}', [
         'uses' => 'Admin\AdminController@usersAll',
         'as' => 'admin.usersAll'
     ]);
-    
+
     Route::get('employee/all', [
         'uses' => 'Admin\AdminController@employeeAll',
         'as' => 'admin.employeeAll'
@@ -2604,7 +2639,7 @@ Route::get('suggession-complain/chat/{chat}', [
         'as' => 'admin.deleteUserNote'
     ]);
 
-    
+
     Route::post('user/update/user/{user}/referrals', [
         'uses' => 'Admin\AdminController@updateReferrals',
         'as' => 'admin.updateReferrals'
@@ -2618,7 +2653,7 @@ Route::get('suggession-complain/chat/{chat}', [
         'as' => 'admin.userUpdate'
     ]);
 
-    
+
     Route::post('new/temp/password/send/post/user/{user}', [
         'uses' => 'Admin\AdminController@newTempPassSendPost',
         'as' => 'admin.newTempPassSendPost'
@@ -2656,7 +2691,7 @@ Route::get('suggession-complain/chat/{chat}', [
     ]);
     //Opinion End
 
- 
+
 
 
     //Review And Rating
@@ -3171,28 +3206,28 @@ Route::get('suggession-complain/chat/{chat}', [
         'uses' => 'Admin\AdminPageController@createslider',
         'as' => 'admin.createslider'
     ]);
-    
+
     Route::get('admin/website/slider/edit/{id}', [
         'uses' => 'Admin\AdminPageController@editslider',
         'as' => 'admin.editslider'
     ]);
-    
+
     Route::get('admin/website/slider/index', [
         'uses' => 'Admin\AdminPageController@listslider',
         'as' => 'admin.listslider'
     ]);
-    
+
     Route::post('admin/website/slider/store/', [
         'uses' => 'Admin\AdminPageController@storeslider',
         'as' => 'admin.storeslider'
     ]);
-    
-    
+
+
     Route::post('admin/website/slider/update/{id}', [
         'uses' => 'Admin\AdminPageController@updateslider',
         'as' => 'admin.updateslider'
     ]);
-    
+
     Route::get('admin/website/slider/delete/{id}', [
         'uses' => 'Admin\AdminPageController@deleteslider',
         'as' => 'admin.deleteslider'
@@ -3325,7 +3360,7 @@ Route::get('suggession-complain/chat/{chat}', [
         'uses' => 'Admin\History\AdminSubscriberHistoryController@LoginAsUser',
         'as' => 'admin.LoginAsUser'
     ]);
-    
+
 
     Route::get('subcriber/edit/subcriber/{subcriber}', [
         'uses' => 'Admin\AdminController@subcriberEdit',
@@ -3452,8 +3487,7 @@ Route::get('suggession-complain/chat/{chat}', [
 
     //newsfeed end
 
-
-
-
-
 });
+
+
+

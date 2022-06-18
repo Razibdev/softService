@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User\UserDashborad;
 
+use App\Jobs\CreatePostpaidAccount;
 use Auth;
 use Hash;
 use Session;
@@ -73,12 +74,12 @@ class UserDashboardController extends Controller
     //     if( $lat != '' && $lon != '' ){
     //         $products = DB::table('service_profiles')
     //             ->selectRaw("service_profiles.*,
-    //                         ( 3959 * acos( 
+    //                         ( 3959 * acos(
     //                         cos( radians(" . $lat . ") ) *
     //                         cos( radians(service_profiles.lat) ) *
-    //                         cos( radians(service_profiles.lng) - radians(" . $lon . ") ) + 
+    //                         cos( radians(service_profiles.lng) - radians(" . $lon . ") ) +
     //                         sin( radians(" . $lat . ") ) *
-    //                         sin( radians(service_profiles.lat) ) ) ) 
+    //                         sin( radians(service_profiles.lat) ) ) )
     //                         AS distance"
     //                         )
     //             // ->where('shop.id','=','product.shop_id')
@@ -86,9 +87,9 @@ class UserDashboardController extends Controller
     //             ->orderBy("distance")
     //             ->get();
     //         return $products;
-    //     }else{  
+    //     }else{
     //         return 'Error Msg';
-    //     }    
+    //     }
     // }
 
 
@@ -121,11 +122,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
 
@@ -183,11 +184,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
 
@@ -243,11 +244,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
 
@@ -287,11 +288,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
         $shops = ServiceProfile::select('id', 'lat', 'lng', 'workstation_id', 'ws_cat_id', 'subscriber_id', 'user_id', 'name', 'email', 'mobile', 'img_name', 'cover_image', 'address', 'short_bio', 'zip_code', 'city', 'country', 'status', 'profile_type', 'addedby_id', 'open', 'fixed_location', 'package_status')
@@ -460,11 +461,11 @@ class UserDashboardController extends Controller
         $me = Auth::user();
         $due= $me->due_balance;
 
-      
+
         if ($me->balance < $due) {
-           
+
             return back()->with('error', 'Your account balance less then Due balance.');
-           
+
         }
         $me->decrement('balance', $due);
         $me->decrement('due_balance', $due);
@@ -586,7 +587,7 @@ class UserDashboardController extends Controller
         $notification1->date=now();
         $notification1->link=$payment->id;
         $notification1->save();
-    
+
         $notification2=new OrderNotifications;
         $notification2->type='admin';
         $notification2->title='Add Balance Request';
@@ -692,37 +693,37 @@ class UserDashboardController extends Controller
                 ->withInput()
                 ->withErrors($validation);
         }
-      
-           
-    
+
+
+
             if (Hash::check($request->password, $me->password)) {
                 if($request->send==1){
-    
+
                     // return back()->with('success', 'Your Password Matched. This section currently in maintenance');
                     // $member = $me->memberAccount;
                     if ($me->balance < 2) {
                         return redirect()->back()->with('warning', 'insufficient balance. Please Recharge');
                     }
-                    
+
                     $pin= rand(1000, 9999);
                     $me->pin=$pin;
-                    
-        
+
+
                     $me->save();
                     $number=$me->mobile;
                     $messages= "Dear {$me->name}, Your OTP is {$pin}.Please use this OTP for set new pin";
-        
+
                     //$me->sendSingleMessage($number,$messages);
                     $SendSms=new SendSms;
                     try {
                         // Send a message using the primary device.
                         $msg = $SendSms->sendSingleMessage($number,$messages);
-        
+
                     } catch (Exception $e) {
                         echo $e->getMessage();
                     }
                     $me->decrement('balance', 2);
-        
+
                     $bt = new BalanceTransaction;
                     $bt->from = 'user';
                     $bt->to = 'admin';
@@ -737,7 +738,7 @@ class UserDashboardController extends Controller
                     $bt->type_id = $me->id;
                     $bt->addedby_id = Auth::id();
                     $bt->save();
-        
+
                     return redirect()->route('user.userPinCheck')->with('success', 'You got four digit OTP code in your mobile. please use you OTP and click Validate')->with('check', "checked");
                 }else{
                     return redirect()->route('user.userPinCheck')->with('success', 'You Match Your Password')->with('check', "checked");
@@ -746,9 +747,9 @@ class UserDashboardController extends Controller
                 return back()->with('error', 'Sorry, your password did not match.');
             }
 
-       
 
-       
+
+
     }
 
     public function userPinCheck(Request $request)
@@ -2308,16 +2309,16 @@ class UserDashboardController extends Controller
         if($request->open == 'pay'){
 
             if( $profile->paystatus=='1'){
-                return redirect()->back()->with('success','You Already pay for this account'); 
+                return redirect()->back()->with('success','You Already pay for this account');
             }
 
 
             $whoCreatingAccount = Auth::user();
 
             if ($whoCreatingAccount->balance < 100) {
-           
+
                 return redirect()->route('user.userBalance')->with('error', 'Your account balance less then 100 tk. If you want to create service then please recharge.');
-               
+
                 //return redirect()->back()->with('error', 'Your account balance less then ' . $category->sp_create_charge . '. if you want to create service then please recharge.');
             }else{
                 $bt = new BalanceTransaction;
@@ -2421,90 +2422,57 @@ class UserDashboardController extends Controller
 
     public function createPostpaidAccountInAllCat(Request $request)
     {
+
         $haveSubscription = Category::whereDoesntHave('subscription', function ($query) {
             $query->where('user_id', Auth::id());
         })->get();
+
+
         if (count($haveSubscription) == 0) {
             return redirect()->back()->with('warning', 'You have already account in all categories');
         }
-        foreach ($haveSubscription as $key => $category) {
-            $workstation = Workstation::find($category->work_station_id);
 
-            $me = Auth::user();
-            $cookieReffer_id = null;
-          
 
-            if (!$me->subscriptions()->count()) {
-                $rvd = $me->verifiedDatas()->first();
-                if ($rvd) {
-                    $cookieReffer_id = $rvd->reffer_code;
-                }
+        // $haveSubscription = array_chunk($haveSubscription, 5);
+
+
+
+        $me = Auth::user();
+        $cookieReffer_id = null;
+
+
+        if (!$me->subscriptions()->count()) {
+            $rvd = $me->verifiedDatas()->first();
+            if ($rvd) {
+                $cookieReffer_id = $rvd->reffer_code;
             }
-          
-            $code = Subscriber::where('subscription_code', $cookieReffer_id)
-                ->where('id', '>', 15)
-                ->where('subscription_code', '<>', null)
-                ->where('work_station_id', $workstation->id)
-                ->first();
-
-            if ($code) {
-                $workstationId = $code->work_station_id;
-                $reffer_id = $code->id;
-               
-            } else {
-
-                // if ($sf = $me->isWSSubscription($workstation)) {
-
-                //     $reffer_id = $sf->id;
-                //     $workstationId = $workstation->id;
-                // } else {
-                    $reffer_id = null;
-                    // $reffer_id = $workstation->id + 15;
-                    $workstationId = $workstation->id;
-                //}
-            }
-
-            $prRow = Subscriber::where('work_station_id', $workstationId)->orderBy('ws_position', 'desc')->first();
-
-            $dis = $me->subscriptionDistrict()->id;
-            if (strlen($dis) < 2) {
-                $dis = '0' . $dis;
-            }
-
-            $wsId = $workstationId;
-            if (strlen($wsId) < 2) {
-                $wsId = '0' . $wsId;
-            }
-
-            $meMob = $me->mobile ?: '00';
-            if (strlen($meMob) > 2) {
-                // $meMob = last 2 digit;
-                $meMob = substr($meMob, -2);
-            }
-
-            $num = 100000000;
-            $ws_pos = $prRow->ws_position + 1;
-            $num = $num + $ws_pos;
-            $scode = $wsId . $num . $meMob . $me->subscriptionDistrict()->id;
-
-            $s = new Subscriber;
-            $s->ws_position = $ws_pos;
-            $s->name = $me->name;
-            $s->email = $me->email;
-            $s->mobile = $me->mobile;
-            $s->category_id = $category->id;
-            $s->district_id = $me->subscriptionDistrict()->id;
-            $s->user_id = $me->id;
-            $s->referral_id = $reffer_id;
-            $s->work_station_id = $workstationId;
-            $s->subscription_code = $scode;
-            $s->addedby_id = Auth::id();
-            $s->free_account = 1;
-
-            $s->save();
-           
         }
-        return redirect()->back()->with('success', 'Accounts Created Successfully');
+
+
+
+        $dis = $me->subscriptionDistrict()->id;
+        if (strlen($dis) < 2) {
+            $dis = '0' . $dis;
+        }
+
+
+
+        $meMob = $me->mobile ?: '00';
+        if (strlen($meMob) > 2) {
+            // $meMob = last 2 digit;
+            $meMob = substr($meMob, -2);
+        }
+
+        $distict =  $me->subscriptionDistrict()->id;
+
+
+
+        CreatePostpaidAccount::dispatch($haveSubscription, $cookieReffer_id, $distict, $meMob, $me);
+
+//        exec('cd C:\laragon\www\softcodeapp\softcodeapp\api && php artisan queue:work', $output, $retval);
+
+        return redirect()->back()->with('success', 'Accounts Created Successfully'.$output);
+
     }
 
     public function addServiceProduct(Request $request)
@@ -2793,7 +2761,7 @@ class UserDashboardController extends Controller
         if($request->user){
             $user = User::Where('id',$request->user)->first();
         }else{
-            $user = Auth::user();  
+            $user = Auth::user();
         }
 
         if ($request->type == "post_paid" || $request->type == "full_paid") {
@@ -2838,7 +2806,7 @@ class UserDashboardController extends Controller
 
 
         $order = ServiceProductOrder::where('id', $request->order_id)->first();
-       
+
 
         if ($request->order_status == $order->order_status) {
             return back()->with('warning', 'Order status Already updated');
@@ -2848,11 +2816,11 @@ class UserDashboardController extends Controller
 
             ServiceProductOrderItem::where('service_product_order_id', $request->order_id)->update([
                 'order_status' => $request->order_status,
-                $at_field => Carbon::now(), 
+                $at_field => Carbon::now(),
                 'editedby_id' => Auth::id()
             ]);
 
-            
+
         $category=Category::Where('id',$request->cat_id)->first();
         $comission_per=$category->service_product_commission;
         $comission_amount=($order->total_sale_price*($comission_per/100));
@@ -2873,21 +2841,21 @@ class UserDashboardController extends Controller
             $bt = new BalanceTransaction;
             $bt->user_id = $order->serviceProfile->user_id;
             $bt->subscriber_id = $order->serviceProfile->subscriber_id;
-            $bt->from = "order_user"; // 
-            $bt->to = "profile_owner"; //saller User 
+            $bt->from = "order_user"; //
+            $bt->to = "profile_owner"; //saller User
             $bt->purpose = 'order_confirmed_balance';
             $bt->previous_balance = $serviceProfileWoner->balance;
             $bt->moved_balance = $owner_amount;
             $bt->new_balance = $bt->previous_balance + $bt->moved_balance;
-            $bt->type = 'profile_order'; 
+            $bt->type = 'profile_order';
             $bt->type_id = $order->id;
             $bt->details = 'Balance (' . $bt->moved_balance . ') Added from For Order. Transaction id:(' . $order->	transection_id . ')';
             $bt->save();
-    
+
             $at = new BalanceTransaction;
             $at->user_id = '2';
-            $at->from = "order_user"; // 
-            $at->to = "admin"; //saller User 
+            $at->from = "order_user"; //
+            $at->to = "admin"; //saller User
             $at->purpose = 'order_confirmed_balance';
             $at->previous_balance = $admin->balance;
             $at->moved_balance = $comission_amount;
@@ -2896,18 +2864,18 @@ class UserDashboardController extends Controller
             $at->type_id = $order->id;
             $at->details = 'Balance (' . $at->moved_balance . ') Added from For Order Comission. Transaction id: (' . $order->	transection_id . ')';
             $at->save();
-    
+
             $serviceProfileWoner->increment('balance', $bt->moved_balance);
             $admin->increment('balance', $at->moved_balance);
             $order->decrement('order_confirmed_price', $order->total_sale_price);
             $order->payment_status = 'paid';
-            $order->save();  
+            $order->save();
 
         }
 
         ServiceProductOrder::where('id', $request->order_id)->update([
             'order_status' => $request->order_status,
-             $at_field => Carbon::now(), 
+             $at_field => Carbon::now(),
             'editedby_id' => Auth::id()
         ]);
 
@@ -2921,7 +2889,7 @@ class UserDashboardController extends Controller
         $notification1->date=now();
         $notification1->link=$order->id;
         $notification1->save();
-    
+
         $notification2=new OrderNotifications;
         $notification2->type='order';
         $notification2->title='Order Status Changed';
@@ -2940,9 +2908,9 @@ class UserDashboardController extends Controller
             return redirect()->route('user.suggesions')->with('success', 'Admin Will be review your order and get back to you. Thanks For using Softcode');
         }
 
-       
 
-       
+
+
     }
 
     public function myServieProfileOrders(Request $request)
@@ -3070,11 +3038,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
 
@@ -3115,11 +3083,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
 
@@ -3146,13 +3114,13 @@ class UserDashboardController extends Controller
 
     public function catwiseProduct(Request $request)
     {
-       
+
         $category = Category::where('id', $request->cat)->where('sp_order', true)->first();
         if (!$category) {
             return back();
         }
         $user = Auth::user();
-       
+
         $service_productall = ServiceProfileProduct::where('status', 'approved')
         ->where('active', true)
         ->where('ws_cat_id', $request->cat)
@@ -3161,7 +3129,7 @@ class UserDashboardController extends Controller
     // dd($service_product);
     $user = Auth::user();
     return view('user.softmarkets.catwiseProduct', compact('user','service_productall','category'));
-       
+
     }
 
     public function softmarketSearch(Request $request)
@@ -3315,11 +3283,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
 
@@ -3355,11 +3323,11 @@ class UserDashboardController extends Controller
         $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
         $radius = $number ? (int) $number : 3000;
         if ($lat and $lng) {
-            $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                        * cos(radians(`lat`)) 
-                        * cos(radians(`lng`) 
-                        - radians(" . $lng . ")) 
-                        + sin(radians(" . $lat . ")) 
+            $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                        * cos(radians(`lat`))
+                        * cos(radians(`lng`)
+                        - radians(" . $lng . "))
+                        + sin(radians(" . $lat . "))
                         * sin(radians(`lat`))))";
         }
         $shops = ServiceProfile::select("*")
@@ -3528,8 +3496,8 @@ class UserDashboardController extends Controller
         ->where('service_profiles.profile_type', 'business')
         ->select('service_product_orders.*')
         ->get();
-       
-     
+
+
         $sales_total = $sales->sum('total_sale_price');
         $sales_count = $sales->count('service_profile_id');
 
@@ -3537,10 +3505,10 @@ class UserDashboardController extends Controller
         $orders = ServiceProductOrder::whereIn('service_profile_id', $myProfileIds)->whereIn('order_status', ['pending', 'confirmed', 'processing','ready_to_ship','shipped','delivered'])->where('payment_status','advanced')->orderBy('id', 'DESC')->get();
 
         $pending_balance= $orders->sum('total_sale_price');
-    
-        
-      
-    
+
+
+
+
         $purchase_total = ServiceProductOrder::where('user_id',$user->id)->sum('total_sale_price');
         $purchase_count = ServiceProductOrder::where('user_id',$user->id)->count('user_id');
         return view('user.softcommerce.softcommerce', compact('user', 'postpaid','paidshop','unpaidshop','sales_total','purchase_count','sales_count','purchase_total', 'prepaid', 'totalPfbalance', 'totalWithdrow', 'biz_profiles', 'totalDeposit', 'postpaid_reffer', 'prepaid_reffer','pending_balance'));
@@ -3550,7 +3518,7 @@ class UserDashboardController extends Controller
         $user = Auth::user();
 
         $totalwitdrawdetails = BalanceTransaction::where('user_id', $user->id)->where('purpose', 'withdraw')->latest()->paginate(10);
-        $totalwitdraw=$totalwitdrawdetails->sum('moved_balance'); 
+        $totalwitdraw=$totalwitdrawdetails->sum('moved_balance');
         $grandtotalwitdraw = BalanceTransaction::where('user_id', $user->id)->where('purpose', 'withdraw')->sum('moved_balance');
 
         return view('user.softcommerce.userwithdrawdetails', compact(
@@ -3564,7 +3532,7 @@ class UserDashboardController extends Controller
         $user = Auth::user();
 
         $totaldepositdetails = BalanceTransaction::where('user_id', $user->id)->where('purpose', 'deposit')->latest()->paginate(10);
-        $totaldeposit=$totaldepositdetails->sum('moved_balance'); 
+        $totaldeposit=$totaldepositdetails->sum('moved_balance');
         $grandtotaldeposit = BalanceTransaction::where('user_id', $user->id)->where('purpose', 'deposit')->sum('moved_balance');
 
         return view('user.softcommerce.userdepositdetails', compact(
@@ -3699,16 +3667,16 @@ class UserDashboardController extends Controller
         //     $haveSubscription = Category::where('work_station_id',$request->workstation)->whereDoesntHave('subscription', function ($query) use ($user) {
         //         $query->where('user_id', $user->id);
         //     })->get();
-    
+
         //     if (count($haveSubscription) == 0) {
         //         return redirect()->back()->with('warning', 'You have already Account in all Categories');
         //     }
         //     foreach ($haveSubscription as $key => $category) {
         //         $workstation = WorkStation::find($category->work_station_id);
-    
+
         //         $me = $user;
         //         $cookieReffer_id = null;
-    
+
         //         if (!$me->subscriptions()->count()) {
         //             $rvd = $me->verifiedDatas()->first();
         //             if ($rvd) {
@@ -3720,14 +3688,14 @@ class UserDashboardController extends Controller
         //             ->where('subscription_code', '<>', null)
         //             ->where('work_station_id', $workstation->id)
         //             ->first();
-    
+
         //         if ($code) {
         //             $workstationId = $code->work_station_id;
         //             $reffer_id = $code->id;
         //         } else {
-    
+
         //             if ($sf = $me->isWSSubscription($workstation)) {
-    
+
         //                 $reffer_id = $sf->id;
         //                 $workstationId = $workstation->id;
         //             } else {
@@ -3736,30 +3704,30 @@ class UserDashboardController extends Controller
         //                 $workstationId = $workstation->id;
         //             }
         //         }
-    
+
         //         $prRow = Subscriber::where('work_station_id', $workstationId)->orderBy('ws_position', 'desc')->first();
-    
+
         //         $dis = $me->subscriptionDistrict()->id;
         //         if (strlen($dis) < 2) {
         //             $dis = '0' . $dis;
         //         }
-    
+
         //         $wsId = $workstationId;
         //         if (strlen($wsId) < 2) {
         //             $wsId = '0' . $wsId;
         //         }
-    
+
         //         $meMob = $me->mobile ?: '00';
         //         if (strlen($meMob) > 2) {
         //             // $meMob = last 2 digit;
         //             $meMob = substr($meMob, -2);
         //         }
-    
+
         //         $num = 100000000;
         //         $ws_pos = $prRow->ws_position + 1;
         //         $num = $num + $ws_pos;
         //         $scode = $wsId . $num . $meMob . $me->subscriptionDistrict()->id;
-    
+
         //         $whoCreatingAccount = Auth::user();
         //         $introducer = Subscriber::where('user_id', $whoCreatingAccount->id)->where('work_station_id', $workstationId)->first();
         //         if ($introducer) {
@@ -3780,7 +3748,7 @@ class UserDashboardController extends Controller
         //                 $s->save();
         //             }
         //         }
-    
+
         //         $s = new Subscriber;
         //         $s->ws_position = $ws_pos;
         //         $s->name = $me->name;
@@ -3794,13 +3762,13 @@ class UserDashboardController extends Controller
         //         $s->subscription_code = $scode;
         //         $s->addedby_id = Auth::id();
         //         $s->free_account = 1;
-    
+
         //         $s->save();
         //     }
 
         // }
 
-        
+
 
         return back()->with('success', 'New user successfully Created');
     }
@@ -3835,13 +3803,13 @@ class UserDashboardController extends Controller
         $user = User::where('id', $request->user)->first();
         $whoCreatingAccount = Auth::user();
 
-       
+
 
         $ifHaveSubscriptionByWhoCreating = Subscriber::where('user_id', $whoCreatingAccount->id)
             ->where('category_id', $request->category)
             ->first();
 
-      
+
 
             // if (!$ifHaveSubscriptionByWhoCreating) {
             //     return back()->with('error', 'You don\'t have Subscription in this category. Please Subscribe in this category and try again');
@@ -3853,7 +3821,7 @@ class UserDashboardController extends Controller
         if($subscription){
             if($subscription->refferal_id==null){
                 $subscription->refferal_id== $ifHaveSubscriptionByWhoCreating->id;
-                $subscription->save();   
+                $subscription->save();
             }
         }
 
@@ -3924,7 +3892,7 @@ class UserDashboardController extends Controller
             }else{
                 $subscription->referral_id = $reffer_id;
             }
-           
+
             $subscription->work_station_id = $workstationId;
             $subscription->subscription_code = $code;
             $subscription->addedby_id = Auth::id();
@@ -3944,8 +3912,8 @@ class UserDashboardController extends Controller
             return back()->with('error', 'Already submitted a profile.' . $moreTalk)->withInput();
         }
 
-       
-        
+
+
         $profile = new ServiceProfile;
         $profile->user_id = $subscription->user_id;
         $profile->subscriber_id = $subscription->id;
@@ -4124,13 +4092,13 @@ class UserDashboardController extends Controller
         if($request->paynow == "paynow"){
            // dd($request->paynow);
             if ($whoCreatingAccount->balance < 100) {
-           
+
                 return redirect()->route('user.userBalance')->with('error', 'Your account balance less then 100 tk. If you want to create service then please recharge.');
-               
+
                 //return redirect()->back()->with('error', 'Your account balance less then ' . $category->sp_create_charge . '. if you want to create service then please recharge.');
             }else{
                 if($profile->paystatus==0){
-                    
+
                     $bt = new BalanceTransaction;
                     $bt->from = 'user';
                     $bt->to = 'admin';
@@ -4147,8 +4115,8 @@ class UserDashboardController extends Controller
                     $bt->save();
                     $whoCreatingAccount->decrement('balance', $bt->moved_balance);
                     $user->increment('ad_balance', $category->sp_adtopup_bonus);
-                    $profile->paystatus = 1; 
-                    $profile->status = true; 
+                    $profile->paystatus = 1;
+                    $profile->status = true;
                     $profile->save();
 
                     $number=$user->mobile;
@@ -4877,7 +4845,7 @@ class UserDashboardController extends Controller
             }else {
                 return back();
             }
-            
+
         } elseif ($request->type == 'user') {
             $order = ServicePayment::find($request->order);
             if ($order->user_id != Auth::id()) {
@@ -4918,7 +4886,7 @@ class UserDashboardController extends Controller
         menuSubmenu('orders', 'getServieItemOrders');
         $user = Auth::user();
         $my_orders = ServiceProductOrder::where('user_id', $user->id)->orderBy('id', "DESC")->paginate(50);
-        
+
         $orders= ServicePayment::whereHas('serviceitem',function($q){
             $q->where('user_id',Auth::id());
         })
@@ -4931,13 +4899,13 @@ class UserDashboardController extends Controller
     {
         menuSubmenu('orders', 'serviceProfileOrders');
         $user = Auth::user();
-      
+
         $myProfileIds = ServiceProfile::where('user_id', Auth::id())->where('profile_type', 'business')->pluck('id');
         $orders = ServiceProductOrder::whereIn('service_profile_id', $myProfileIds)->orderBy('id', 'DESC')->paginate(30);
         $orders2= ServicePayment::where('user_id',Auth::id())
         ->latest()
         ->get();
-        
+
        return view('user.serviceOrders.sales',compact('orders','orders2'));
     }
 
@@ -4963,25 +4931,25 @@ class UserDashboardController extends Controller
         ->where('service_profiles.profile_type', 'business')
         ->select('service_product_orders.*')
         ->get();
-       
-     
+
+
         $sales_total = $sales->sum('total_sale_price');
         $sales_count = $sales->count('service_profile_id');
-    
-        
-      
-    
+
+
+
+
         $purchase_total = ServiceProductOrder::where('user_id',$user->id)->sum('total_sale_price');
         $purchase_count = ServiceProductOrder::where('user_id',$user->id)->count('user_id');
-       
+
         $user = User::withoutGlobalScopes()->where('id', request()->user)->firstOrFail();
-     
+
         // $standard_subscriber= $user->subscriber->where('free_account',0)->where('user_id',Auth::id())->get();
         $subscription = Subscriber::where('user_id', '!=', request()->user)
             ->where('free_account', false)
             ->where('referral_id', '!=', null)
             ->get();
-  
+
         return view('user.employee.refferdetailshistory', compact('postpaid','paidshop','unpaidshop','sales_total','purchase_count','sales_count','purchase_total', 'prepaid', 'totalPfbalance', 'totalWithdrow', 'biz_profiles', 'totalDeposit', 'postpaid_reffer', 'prepaid_reffer','subscription','user'));
     }
 
@@ -5013,11 +4981,11 @@ class UserDashboardController extends Controller
        $number = filter_var($request->radius, FILTER_SANITIZE_NUMBER_INT);
        $radius = $number ? (int) $number : 3000;
        if ($lat and $lng) {
-           $haversine = "(6371 * acos(cos(radians(" . $lat . ")) 
-                       * cos(radians(`lat`)) 
-                       * cos(radians(`lng`) 
-                       - radians(" . $lng . ")) 
-                       + sin(radians(" . $lat . ")) 
+           $haversine = "(6371 * acos(cos(radians(" . $lat . "))
+                       * cos(radians(`lat`))
+                       * cos(radians(`lng`)
+                       - radians(" . $lng . "))
+                       + sin(radians(" . $lat . "))
                        * sin(radians(`lat`))))";
        }
 
@@ -5075,7 +5043,7 @@ class UserDashboardController extends Controller
         $data->user_id =$user->id;
 
         //dd($request->profile_image);
-      
+
         if ($pi = $request->profile_image) {
             $f = 'user/deliveryman/' . $data->profile_image;
             if (Storage::disk('public')->exists($f)) {
@@ -5116,15 +5084,15 @@ class UserDashboardController extends Controller
             $data->save();
         }
         $data->save();
-       
+
         return redirect()->route('user.listdeliveryman')->with('success', 'Delivery Man Added Successfully');
-        
+
     }
     public function editdeliveryman($id)
     {
         menuSubmenu('delivery', 'delivery');
         $data = DeliveryMan::find($id);
-        return view('user.deliveryman.edit',compact('data')); 
+        return view('user.deliveryman.edit',compact('data'));
     }
     public function updatedeliveryman(Request $request)
     {
@@ -5143,7 +5111,7 @@ class UserDashboardController extends Controller
         $data->save();
         if ($pi = $request->profile_image) {
             $f = 'user/deliveryman/' . $data->profile_image;
-          
+
             if (Storage::disk('public')->exists($f)) {
                 Storage::disk('public')->delete($f);
             }
@@ -5192,7 +5160,7 @@ class UserDashboardController extends Controller
         }
         $data->delete();
         return redirect()->route('user.listdeliveryman')->with('success', 'Delivery Man Delete Successfully');
-        
+
     }
     public function listdeliveryman()
     {
@@ -5219,7 +5187,7 @@ class UserDashboardController extends Controller
 
 
 
-  
+
 
 
 

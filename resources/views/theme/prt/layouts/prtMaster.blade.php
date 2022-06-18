@@ -4,7 +4,7 @@
 
 		<!-- Basic -->
 		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 		@if(isset($websiteParameter) and ($websiteParameter->favicon))
 
@@ -21,7 +21,7 @@
 		<link rel="apple-touch-icon" href="{{asset('img/favicon.ico')}}">
 
 		@endif
-		
+
 		@if (isset($websiteParameter->title) or isset($websiteParameter->short_title))
 		<title>{{$websiteParameter->title}} || {{$websiteParameter->short_title}}</title>
 		@else
@@ -29,7 +29,7 @@
 			Explore your future with us
 		</title>
 		@endif
-		
+
 
         @yield('meta')
 
@@ -42,11 +42,11 @@
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 
 
-	
+
 		@if (isset($websiteParameter->google_analytics_code))
 		{!! $websiteParameter->google_analytics_code !!}
 		@endif
-	
+
 		@if (isset($websiteParameter->facebook_pixel_code))
 		{!! $websiteParameter->facebook_pixel_code !!}
 		@endif
@@ -79,12 +79,12 @@
 		<link rel="stylesheet" href="{{asset('prt/vendor/rs-plugin/css/navigation.css')}}">
 		<link rel="stylesheet" href="{{asset('prt/vendor/circle-flip-slideshow/css/component.css')}}">
 		<link rel="stylesheet" href="{{asset('prt/css/w3.css')}}">
-		
+
 		<!-- Demo CSS -->
 
 
 		<!-- Skin CSS -->
-		<link rel="stylesheet" href="{{asset('prt/css/skins/default.css')}}"> 
+		<link rel="stylesheet" href="{{asset('prt/css/skins/default.css')}}">
 
 		<!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="{{asset('prt/css/custom.css')}}">
@@ -115,7 +115,7 @@
 
 
 		<script data-ad-client="ca-pub-3860633623050094" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-	
+
 
 		<!-- Meta Pixel Code -->
 			<script>
@@ -166,11 +166,11 @@
 
 		<div class="body">
 			@include('theme.prt.layouts.header')
-			
+
 			{{-- @include('sweetalert::alert') --}}
 			@include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
 
-			
+
 			<script src="{{ asset('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
 
 
@@ -207,11 +207,11 @@
 				</div>
 				</div>
 			</div>
-			
+
 		</div>
 
 		<!-- Vendor -->
-		
+
 		<script src="{{asset('prt/vendor/jquery/jquery.min.js')}}"></script>
 		<script src="{{asset('prt/vendor/jquery.appear/jquery.appear.min.js')}}"></script>
 		<script src="{{asset('prt/vendor/jquery.easing/jquery.easing.min.js')}}"></script>
@@ -228,10 +228,10 @@
 		<script src="{{asset('prt/vendor/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
 		<script src="{{asset('prt/vendor/vide/jquery.vide.min.js')}}"></script>
 		<script src="{{asset('prt/vendor/vivus/vivus.min.js')}}"></script>
-		
+
 		<!-- Theme Base, Components and Settings -->
 		<script src="{{asset('prt/js/theme.js')}}"></script>
-		
+
 		<!-- Current Page Vendor and Views -->
 		<script src="{{asset('prt/vendor/rs-plugin/js/jquery.themepunch.tools.min.js')}}"></script>
 		<script src="{{asset('prt/vendor/rs-plugin/js/jquery.themepunch.revolution.min.js')}}"></script>
@@ -240,26 +240,26 @@
 
 		<!-- Theme Custom -->
 		<script src="{{asset('js/custom.js')}}"></script>
-		
+
 		<!-- Theme Initialization Files -->
 		<script src="{{asset('prt/js/theme.init.js')}}"></script>
 
-		
 
- 
- 
+
+
+
   {{-- firebase start --}}
- 
+
  <!-- The core Firebase JS SDK is always required and must be listed first -->
  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
- 
+
  <!-- TODO: Add SDKs for Firebase products that you want to use
 	  https://firebase.google.com/docs/web/setup#available-libraries -->
  {{-- <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script> --}}
- 
+
  <!-- Add Firebase products that you want to use -->
    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
- 
+
  <script>
    // Your web app's Firebase configuration
    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -276,9 +276,9 @@
    firebase.initializeApp(firebaseConfig);
    // firebase.analytics();
  </script>
- 
+
  {{-- firebase end --}}
-		
+
 
          @stack('js')
 

@@ -26,6 +26,7 @@
         "spatie/laravel-permission": "^3.18",
         "spatie/laravel-tags": "^3.0",
         "spatie/laravel-translatable": "^4.6",
+        "tymon/jwt-auth": "^1.0",
         "vnsdks/slug-generator": "^1.0",
         "webpatser/laravel-countries": "^1.5"
     },

@@ -16,11 +16,11 @@ use DB;
 
 class UserCheckController extends Controller
 {
-     
+
     public function userCheckByMobile(Request $request)
     {
-       $user =  User::where('mobile', $request->mobile)->count();
-       
+        $user =  User::where('mobile', $request->mobile)->count();
+
 
         $dialCode = substr($request->mobile, 0, 4);
         if($dialCode == '+880')
@@ -32,17 +32,17 @@ class UserCheckController extends Controller
                 if($cookie)
                 {
                     Cookie::forget('mobile_saved');
-                    
-                }    
-                
+
+                }
+
                 $name = 'mobile_saved';
                 $value = $request->mobile;
                 $min = 60 * 24; //for one day;
                 $cookie = cookie($name, $value, $min);
-    
+
                 $vd = VerifiedData::where('mobile', $request->mobile)
-                ->where('user_id', null)
-                ->first();
+                    ->where('user_id', null)
+                    ->first();
                 if($vd)
                 {
                     $vd->verify_code = $request->verification_code;
@@ -70,46 +70,46 @@ class UserCheckController extends Controller
                     $vd->reffer_code = $rcookie;
                     $vd->save();
                 }
-    
-    
+
+
                 //save mobile, country,currency, calling code
                 // mobile
                 // mobile_country
                 // calling_code
                 // currency_code
-    
-               if($request->ajax())
-               {
+
+                if($request->ajax())
+                {
                     return response()->json([
                         'success' => true,
                         'mobile' => $request->mobile,
                         'user' => 0,
                         'bdMobile' => true
                     ])->cookie($cookie);
-               }
+                }
             }
 
         }
         $usercheck =  DB::table('users')->where('mobile',$request->mobile)->first();
-       if($usercheck->active==0){
+        if($usercheck->active==0){
             if($request->ajax())
             {
-            return response()->json([
-                'usercheck' => 2,
-            ]);
+                return response()->json([
+                    'usercheck' => 2,
+                ]);
             }
 
-       }
+        }
 
-       if($request->ajax())
-       {
-        return response()->json([
-            'mobile' => $request->mobile,
-            'user' => $user > 0 ? true : false,
-        ]);
-       }
+        if($request->ajax())
+        {
+            return response()->json([
+                'mobile' => $request->mobile,
+                'user' => $user > 0 ? true : false,
+            ]);
+        }
 
-       return back();
+        return back();
     }
 
     public function loginByMobile(Request $request)
@@ -124,15 +124,15 @@ class UserCheckController extends Controller
             if($request->ajax())
             {
                 return Response()->json(array(
-                'success' => false,
-                'errors' => $validation->errors()->toArray()
+                    'success' => false,
+                    'errors' => $validation->errors()->toArray()
                 ));
             }
         }
 
         $remember = true;
 
-        if (Auth::attempt(['mobile' => $request->login_mobile, 'password' => $request->login_password], $remember)) 
+        if (Auth::attempt(['mobile' => $request->login_mobile, 'password' => $request->login_password], $remember))
         {
             // The user is being logging and remembered...
             $request->session()->regenerate();
@@ -151,8 +151,8 @@ class UserCheckController extends Controller
             if($request->ajax())
             {
                 return Response()->json(array(
-                'success' => true,
-                'url' => $url
+                    'success' => true,
+                    'url' => $url
                 ));
             }
         }
@@ -161,8 +161,8 @@ class UserCheckController extends Controller
             if($request->ajax())
             {
                 return Response()->json(array(
-                'success' => false,
-                'errors' => ['login'=> 'Your mobile number and password did not match']
+                    'success' => false,
+                    'errors' => ['login'=> 'Your mobile number and password did not match']
                 ));
             }
         }
@@ -178,19 +178,19 @@ class UserCheckController extends Controller
             $cookie = $request->cookie('mobile_saved');
             if($cookie)
             {
-           
+
                 Cookie::forget('mobile_saved');
 
-            }    
-            
+            }
+
             $name = 'mobile_saved';
             $value = $request->register_mobile;
             $min = 60 * 24; //for one day;
             $cookie = cookie($name, $value, $min);
 
             $vd = VerifiedData::where('mobile', $request->register_mobile)
-            ->where('user_id', null)
-            ->first();
+                ->where('user_id', null)
+                ->first();
             if($vd)
             {
                 $vd->verify_code = $request->verification_code;
@@ -225,22 +225,22 @@ class UserCheckController extends Controller
             // calling_code
             // currency_code
 
-           if($request->ajax())
-           {
+            if($request->ajax())
+            {
                 return response()->json([
                     'success' => true
                 ])->cookie($cookie);
-           }
+            }
         }
 
-       if($request->ajax())
-       {
-        return response()->json([
-            'success' => false,
-        ]);
-       }
+        if($request->ajax())
+        {
+            return response()->json([
+                'success' => false,
+            ]);
+        }
 
-       return back();
+        return back();
     }
 
     public function passwordSaveByMobile(Request $request)
@@ -255,8 +255,8 @@ class UserCheckController extends Controller
             if($request->ajax())
             {
                 return Response()->json(array(
-                'success' => false,
-                'errors' => $validation->errors()->toArray()
+                    'success' => false,
+                    'errors' => $validation->errors()->toArray()
                 ));
             }
         }
@@ -301,11 +301,11 @@ class UserCheckController extends Controller
                 $bt->save();
 
             }
-          
+
 
         }
 
-        
+
 
         if($user)
         {
@@ -315,29 +315,29 @@ class UserCheckController extends Controller
 
             $remember = true;
 
-            if (Auth::attempt(['mobile' => $me->mobile, 'password' => $request->password], $remember)) 
+            if (Auth::attempt(['mobile' => $me->mobile, 'password' => $request->password], $remember))
             {
                 // The user is being logging and remembered...
-                        $request->session()->regenerate();
+                $request->session()->regenerate();
 
-                        $user = Auth::user();
+                $user = Auth::user();
 
-                        if($user->isAdmin())
-                        {
-                            $url = route('admin.dashboard');
-                        }
-                        else
-                        {
-                            $url =  route('user.dashboard');
-                        }
+                if($user->isAdmin())
+                {
+                    $url = route('admin.dashboard');
+                }
+                else
+                {
+                    $url =  route('user.dashboard');
+                }
 
-                        if($request->ajax())
-                        {
-                            return Response()->json(array(
-                            'success' => true,
-                            'url' => $url
-                            ));
-                        }
+                if($request->ajax())
+                {
+                    return Response()->json(array(
+                        'success' => true,
+                        'url' => $url
+                    ));
+                }
             }
         }
 
@@ -357,8 +357,8 @@ class UserCheckController extends Controller
             if($request->ajax())
             {
                 return Response()->json(array(
-                'success' => false,
-                'errors' => $validation->errors()->toArray()
+                    'success' => false,
+                    'errors' => $validation->errors()->toArray()
                 ));
             }
         }
@@ -371,9 +371,9 @@ class UserCheckController extends Controller
             if($request->ajax())
             {
                 return Response()->json(array(
-                'success' => false,
-                'errors' => $validation->errors()->toArray(),
-                'errors' => ['mobile_number'=> 'Try again using mobile number']
+                    'success' => false,
+                    'errors' => $validation->errors()->toArray(),
+                    'errors' => ['mobile_number'=> 'Try again using mobile number']
                 ));
             }
         }
@@ -393,7 +393,7 @@ class UserCheckController extends Controller
                 $me->mobile_country = $vd->mobile_country;
                 $me->calling_code = $vd->calling_code;
                 $me->save();
-                
+
                 $vd->user_id = $me->id;
                 $vd->save();
             }else
@@ -406,7 +406,7 @@ class UserCheckController extends Controller
 
             //$me->sendSingleMessage($number,$messages);
             $SendSms=new SendSms;
-            try { 
+            try {
                 // Send a message using the primary device.
                 $msg = $SendSms->sendSingleMessage($number,$messages);
 
@@ -416,7 +416,7 @@ class UserCheckController extends Controller
 
             $remember = true;
 
-            if (Auth::attempt(['mobile' => $me->mobile, 'password' => $request->password], $remember)) 
+            if (Auth::attempt(['mobile' => $me->mobile, 'password' => $request->password], $remember))
             {
                 // The user is being logging and remembered...
                 $request->session()->regenerate();
@@ -424,8 +424,8 @@ class UserCheckController extends Controller
                 if($request->ajax())
                 {
                     return Response()->json(array(
-                    'success' => true,
-                    'url' =>  route('user.dashboard'),
+                        'success' => true,
+                        'url' =>  route('user.dashboard'),
                     ))->withCookie(Cookie::forget('mobile_saved'))->withCookie( Cookie::forget('reffer'));
                 }
             }
@@ -433,13 +433,13 @@ class UserCheckController extends Controller
 
 
         if($request->ajax())
-       {
-        return response()->json([
-            'success' => false,
-        ]);
-       }
+        {
+            return response()->json([
+                'success' => false,
+            ]);
+        }
 
-       return back();
+        return back();
     }
 
     public function unsaveMobile(Request $request)
@@ -447,10 +447,10 @@ class UserCheckController extends Controller
         $cookie = $request->cookie('mobile_saved');
         if($cookie)
         {
-       
+
             return back()->withCookie(Cookie::forget('mobile_saved'));
 
-        } 
+        }
 
         return back()->withCookie(Cookie::forget('mobile_saved'));
     }

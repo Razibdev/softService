@@ -5,8 +5,8 @@ require('alpinejs');
 
 
 import {createApp} from 'vue';
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 import store from './store';
 
 import mitt from 'mitt';
@@ -21,13 +21,32 @@ import CartButton from './components/main/user/cart/CartButton.vue';
 
 
 const app =  createApp({});
-app.component("near-shop", NearShop); 
-app.component("mini-cart", MiniCart); 
-app.component("cart-button", CartButton); 
+app.component("near-shop", NearShop);
+app.component("mini-cart", MiniCart);
+app.component("cart-button", CartButton);
 app.config.globalProperties.emitter = emitter;
 app.use(VueAxios, axios);
 app.use(store);
 app.mount('#app');
+
+
+
+
+
+import HomeApp from './App.vue';
+import router from './router/index';
+
+import User from './Helps/User.js';
+window.User = User;
+import VueCookies from 'vue-cookies';
+window.VueCookies = VueCookies;
+
+const appUser = createApp({});
+appUser.component("home-app", HomeApp);
+appUser.use(router);
+appUser.use(VueCookies);
+// appUser.use(User);
+appUser.mount('#app_user');
 
 
 
@@ -77,9 +96,9 @@ app.mount('#app');
 
 
 // import { createApp } from 'vue';
-// import App from "./App.vue"; 
+// import App from "./App.vue";
 
-// import router from './router.js'; 
+// import router from './router.js';
 // import store from "./store.js";
 
 // const app = createApp(App)
